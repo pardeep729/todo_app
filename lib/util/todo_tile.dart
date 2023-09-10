@@ -47,13 +47,21 @@ class TodoTile extends StatelessWidget {
                   value: checkboxValue,
                   onChanged: onChanged,
                   activeColor: Theme.of(context).hintColor,
+                  side: BorderSide(
+                    color:
+                        Theme.of(context).primaryTextTheme.bodyLarge?.color ??
+                            Colors.black,
+                    width: 2,
+                  ),
                 ),
                 Flexible(
                   child: Text(
                     textValue,
                     style: TextStyle(
                       fontSize: 20,
-                      color: checkboxValue ? Colors.grey : Colors.black87,
+                      color: checkboxValue
+                          ? Colors.grey
+                          : Theme.of(context).primaryTextTheme.bodyLarge?.color,
                       decoration: checkboxValue
                           ? TextDecoration.lineThrough
                           : TextDecoration.none,

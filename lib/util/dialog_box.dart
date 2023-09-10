@@ -26,10 +26,22 @@ class DialogBox extends StatelessWidget {
               // Get user input
               TextField(
                 controller: controller,
+                style: TextStyle(
+                    color: Theme.of(context).primaryTextTheme.bodyLarge?.color),
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Add a new TODO",
-                ),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .bodyLarge
+                                    ?.color ??
+                                Colors.black)),
+                    hintText: "Add a new TODO",
+                    hintStyle: TextStyle(
+                        color: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyLarge
+                            ?.color)),
               ),
 
               // Buttons
