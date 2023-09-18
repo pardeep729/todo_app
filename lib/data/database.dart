@@ -6,6 +6,8 @@ class ToDoDatabase {
   final _mybox = Hive.box('myBox');
 
   // Run this method if this is 1st time ever opening this app
+  // 1 item of fromat [<name>, <checkbox value>, <datetime>]
+  // The `datetime` updates when deleted
   void createInitialData() {
     toDoList = [
       ["Go to work", false, null],

@@ -22,6 +22,10 @@ class _HomePageState extends State<HomePage> {
   final _myBox = Hive.box('myBox');
   ToDoDatabase db = ToDoDatabase();
 
+  // Reference to which TODOs to show (checked, unchecked)
+  bool showChecked = true; // TODOs that are done
+  bool showUnchecked = true; // TODOs that are yet to be done
+
   @override
   void initState() {
     // If this is the first time opening app, create default data
@@ -41,7 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   void saveNewTodo() {
     setState(() {
-      db.toDoList.add([_controller.text, false]);
+      db.toDoList.add([_controller.text, false, null]);
+      db.loadData();
       _controller.clear();
     });
     Navigator.of(context).pop();
@@ -102,16 +107,24 @@ class _HomePageState extends State<HomePage> {
         ),
         shadowColor: Colors.transparent,
       ),
-      body: ListView.builder(
-          itemCount: db.toDoList.length,
-          itemBuilder: (context, index) {
-            return TodoTile(
-              textValue: db.toDoList[index][0],
-              checkboxValue: db.toDoList[index][1],
-              deleteFunction: (context) => deleteTask(index),
-              onChanged: (value) => checkBoxChanged(value, index),
-            );
-          }),
+      body: Scrollbar(
+        child: ListView.builder(
+            itemCount: db.toDoList.length,
+            itemBuilder: (context, index) {
+              bool checkboxValue = db.toDoList[index][1];
+              if ((showChecked && checkboxValue) ||
+                  (showUnchecked && !checkboxValue)) {
+                return TodoTile(
+                  textValue: db.toDoList[index][0],
+                  checkboxValue: checkboxValue,
+                  deleteFunction: (context) => deleteTask(index),
+                  onChanged: (value) => checkBoxChanged(value, index),
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            }),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           decoration: BoxDecoration(
@@ -163,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  ), //TODO
+                  ),
                 ),
                 FloatingActionButton(
                   onPressed: createNewTodo,
@@ -175,7 +188,43 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.info),
-                  onPressed: () => showAboutDialog(context: context),
+                  // onPressed: () => showAboutDialog(context: context),
+                  onPressed: () => showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => StatefulBuilder(
+                      builder: (context, setState) => Dialog(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            child: Column(children: [
+                              SwitchListTile(
+                                title: Text("Show completed?"),
+                                value: showChecked,
+                                onChanged: (bool value) => setState(() {
+                                  showChecked = !showChecked;
+                                }),
+                              ),
+                              SwitchListTile(
+                                title: Text("Show incomplete?"),
+                                value: showUnchecked,
+                                onChanged: (bool value) => setState(() {
+                                  showUnchecked = !showUnchecked;
+                                }),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Confirm"))
+                            ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ).then((value) => setState(
+                        () {},
+                      )),
                 ),
               ],
             ),

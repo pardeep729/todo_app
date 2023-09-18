@@ -15,7 +15,7 @@ void main() async {
   await Hive.initFlutter();
 
   // open a hive box
-  var box = await Hive.openBox('myBox');
+  await Hive.openBox('myBox');
 
   runApp(DevicePreview(
     enabled: !kReleaseMode,
@@ -33,11 +33,25 @@ class TodoApp extends StatefulWidget {
 class _TodoAppState extends State<TodoApp> {
   Color primaryColour = Colors.amber;
 
+  final _myBox = Hive.box('myBox');
+
   void changeThemeColour(color) {
     setState(() {
       primaryColour = color;
     });
-    debugPrint(primaryColour.toString());
+    _myBox.put('colour', primaryColour.value);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // If this is the first time opening app, create default colour
+    if (_myBox.get('colour') == null) {
+      _myBox.put('colour', primaryColour.value);
+    } else {
+      primaryColour = Color(_myBox.get('colour'));
+    }
   }
 
   @override

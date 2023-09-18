@@ -20,7 +20,7 @@ class TodoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
         child: Slidable(
           endActionPane: ActionPane(
             motion: StretchMotion(),
