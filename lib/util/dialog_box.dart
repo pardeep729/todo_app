@@ -29,7 +29,7 @@ class DialogBox extends StatelessWidget {
                 style: TextStyle(
                     color: Theme.of(context).primaryTextTheme.bodyLarge?.color),
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                             color: Theme.of(context)
                                     .primaryTextTheme
@@ -40,8 +40,9 @@ class DialogBox extends StatelessWidget {
                     hintStyle: TextStyle(
                         color: Theme.of(context)
                             .primaryTextTheme
-                            .bodyLarge
-                            ?.color)),
+                            .bodyLarge!
+                            .color
+                            ?.withOpacity(0.7))),
               ),
 
               // Buttons
